@@ -27,6 +27,8 @@ export const IndicTransliterate = ({
   onBlur,
   value,
   onKeyDown,
+  ulcaSuggestionCallback,
+  callingFromULCA,
   containerClassName = "",
   containerStyles = {},
   activeItemStyles = {},
@@ -112,12 +114,12 @@ export const IndicTransliterate = ({
       ? maxOptions - 1
       : maxOptions;
 
-    const data = await getTransliterateSuggestions(lastWord, {
+    const data = callingFromULCA ? ulcaSuggestionCallback() : await getTransliterateSuggestions(lastWord, {
       numOptions,
       showCurrentWordAsLastSuggestion,
       lang,
     });
-    setOptions(data ?? []);
+    setOptions(data ? data : []);
   };
 
   const getDirectionAndFont = async (lang: Language) => {

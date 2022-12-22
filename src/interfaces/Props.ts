@@ -92,4 +92,14 @@ export interface IndicTransliterateProps
    * @type boolean
    */
   enabled?: boolean;
+  /**
+   * show suggestion from ai4bharat API or other API
+   * @type boolean
+   */
+  callingFromULCA: boolean,
+    
+  //  Callback when fetching suggestion from other API
+
+  ulcaSuggestionCallback: ()=> void,
+  
 }

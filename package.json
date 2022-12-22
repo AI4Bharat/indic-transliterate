@@ -1,6 +1,6 @@
 {
   "name": "@ai4bharat/indic-transliterate",
-  "version": "1.2.14",
+  "version": "1.2.15",
   "description": "Transliterate component for React",
   "author": "AI4Bharat",
   "license": "MIT",
