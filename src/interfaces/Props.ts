@@ -97,9 +97,17 @@ export interface IndicTransliterateProps
    * @type boolean
    */
   callingFromULCA: boolean,
-    
-  //  Callback when fetching suggestion from other API
+   
+  /**
+   * model ID if callingFromULCA
+   */
 
-  ulcaSuggestionCallback: ()=> void,
+   transliterationModelId?: string 
+
+   /**
+    * custom URL to fetch suggestion
+    */
+   customApiURL?: string
+
   
 }
