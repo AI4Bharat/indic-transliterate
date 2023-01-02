@@ -114,7 +114,7 @@ export const IndicTransliterate = ({
       ? maxOptions - 1
       : maxOptions;
 
-    const data = customSuggestions ? await listCustomSuggestions(lastWord) : await getTransliterateSuggestions(lastWord, {
+    const data = (customSuggestions && listCustomSuggestions) ? await listCustomSuggestions(lastWord) : await getTransliterateSuggestions(lastWord, {
       numOptions,
       showCurrentWordAsLastSuggestion,
       lang,
