@@ -9,7 +9,6 @@ import { LangObject } from "./types/LangObject";
 import { TriggerKeys } from "./constants/TriggerKeys";
 import { getTransliterateSuggestions } from "./util/suggestions-util";
 import { getTransliterationLanguages } from "./util/getTransliterationLanguages";
-import { fetchSuggestionFromCustomApi } from "./util/suggestion-from-custom_api";
 
 const KEY_UP = "ArrowUp";
 const KEY_DOWN = "ArrowDown";
@@ -28,9 +27,8 @@ export const IndicTransliterate = ({
   onBlur,
   value,
   onKeyDown,
-  callingFromULCA,
-  customApiURL,
-  transliterationModelId,
+  listCustomSuggestions,
+  customSuggestions,
   containerClassName = "",
   containerStyles = {},
   activeItemStyles = {},
@@ -116,13 +114,13 @@ export const IndicTransliterate = ({
       ? maxOptions - 1
       : maxOptions;
 
-    const data = callingFromULCA ? await fetchSuggestionFromCustomApi(lastWord, customApiURL!, transliterationModelId!) : await getTransliterateSuggestions(lastWord, {
+    const data = customSuggestions ? await listCustomSuggestions(lastWord) : await getTransliterateSuggestions(lastWord, {
       numOptions,
       showCurrentWordAsLastSuggestion,
       lang,
     });
 
-    console.log("data --- ", data);
+    console.log("data ------ ", data);
     setOptions(data ? data : []);
   };
 

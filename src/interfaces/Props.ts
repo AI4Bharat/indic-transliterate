@@ -92,22 +92,17 @@ export interface IndicTransliterateProps
    * @type boolean
    */
   enabled?: boolean;
+  
   /**
    * show suggestion from ai4bharat API or other API
    * @type boolean
    */
-  callingFromULCA: boolean,
-   
-  /**
-   * model ID if callingFromULCA
-   */
-
-   transliterationModelId?: string 
+  customSuggestions: boolean;
 
    /**
-    * custom URL to fetch suggestion
+    * get suggestions from the app which is using transliterate package
     */
-   customApiURL?: string
+   listCustomSuggestions(text: string) : Promise<string[] | undefined>
 
   
 }
