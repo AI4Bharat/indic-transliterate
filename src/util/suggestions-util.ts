@@ -11,8 +11,8 @@ type CacheEntry = {
   frequency: number;
 };
 
-const MAX_CACHE_SIZE = 10;
-const SAVE_THRESHOLD = 10;
+const MAX_CACHE_SIZE = 1000;
+const SAVE_THRESHOLD = 20;
 const CACHE_KEY = 'transliterateCache';
 
 const cache: Record<string, Record<string, CacheEntry>> = loadCacheFromLocalStorage();
