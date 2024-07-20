@@ -135,12 +135,12 @@ export const IndicTransliterate = ({
     // fetch suggestion from api
     // const url = `https://www.google.com/inputtools/request?ime=transliteration_en_${lang}&num=5&cp=0&cs=0&ie=utf-8&oe=utf-8&app=jsapi&text=${lastWord}`;
 
-    const numOptions = showCurrentWordAsLastSuggestion
-      ? maxOptions - 1
-      : maxOptions;
+    // const numOptions = showCurrentWordAsLastSuggestion
+    //   ? maxOptions - 1
+    //   : maxOptions;
 
     const data = await getTransliterateSuggestions(lastWord, customApiURL, {
-      numOptions,
+      // numOptions,
       showCurrentWordAsLastSuggestion,
       lang,
     });

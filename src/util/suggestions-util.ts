@@ -1,7 +1,7 @@
 import { Language } from "../types/Language";
 
 type Config = {
-  numOptions?: number;
+  // numOptions?: number;
   showCurrentWordAsLastSuggestion?: boolean;
   lang?: Language;
 };
@@ -11,7 +11,7 @@ type CacheEntry = {
   frequency: number;
 };
 
-const cache: Record<string, CacheEntry> = {};
+const cache: Record<string, Record<string, CacheEntry>> = {};
 
 export const getTransliterateSuggestions = async (
   word: string,
@@ -19,19 +19,23 @@ export const getTransliterateSuggestions = async (
   config?: Config,
 ): Promise<string[] | undefined> => {
   console.log(cache);
-  const { showCurrentWordAsLastSuggestion, lang } = config || {
-    numOptions: 5,
-    showCurrentWordAsLastSuggestion: true,
-    lang: "hi",
-  };
+  const {
+    // numOptions = 5,
+    showCurrentWordAsLastSuggestion = true,
+    lang = "hi",
+  } = config || {};
   // fetch suggestion from api
   // const url = `https://www.google.com/inputtools/request?ime=transliteration_en_${lang}&num=5&cp=0&cs=0&ie=utf-8&oe=utf-8&app=jsapi&text=${word}`;
   // let myHeaders = new Headers();
   // myHeaders.append("Content-Type", "application/json");
 
-  if (cache[word]) {
-    cache[word].frequency += 1;
-    return cache[word].suggestions;
+  if (!cache[lang]) {
+    cache[lang] = {};
+  }
+
+  if (cache[lang][word]) {
+    cache[lang][word].frequency += 1;
+    return cache[lang][word].suggestions;
   }
 
   const requestOptions = {
@@ -50,7 +54,7 @@ export const getTransliterateSuggestions = async (
     );
     let data = await res.json();
     console.log("library data", data);
-    if(!customApiURL.includes("xlit-api")){
+    if (!customApiURL.includes("xlit-api")) {
       data.result = data.output[0].target;
     }
     if (data && data.result.length > 0) {
@@ -58,8 +62,7 @@ export const getTransliterateSuggestions = async (
         ? [...data.result, word]
         : data.result;
 
-      // Update cache
-      cache[word] = {
+      cache[lang][word] = {
         suggestions: found,
         frequency: 1,
       };
@@ -68,7 +71,7 @@ export const getTransliterateSuggestions = async (
     } else {
       if (showCurrentWordAsLastSuggestion) {
         const fallback = [word];
-        cache[word] = {
+        cache[lang][word] = {
           suggestions: fallback,
           frequency: 1,
         };
