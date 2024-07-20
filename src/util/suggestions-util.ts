@@ -11,8 +11,21 @@ type CacheEntry = {
   frequency: number;
 };
 
-const cache: Record<string, Record<string, CacheEntry>> = {};
 const MAX_CACHE_SIZE = 10;
+const SAVE_THRESHOLD = 10;
+const CACHE_KEY = 'transliterateCache';
+
+const cache: Record<string, Record<string, CacheEntry>> = loadCacheFromLocalStorage();
+let newEntriesCount = 0;
+
+function loadCacheFromLocalStorage(): Record<string, Record<string, CacheEntry>> {
+  const cachedData = localStorage.getItem(CACHE_KEY);
+  return cachedData ? JSON.parse(cachedData) : {};
+}
+
+function saveCacheToLocalStorage() {
+  localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+}
 
 const getWordWithLowestFrequency = (dictionary: Record<string, CacheEntry>): string | null => {
   let lowestFreqWord: string | null = null;
@@ -89,6 +102,12 @@ export const getTransliterateSuggestions = async (
         frequency: 1,
       };
 
+      newEntriesCount += 1;
+      if (newEntriesCount >= SAVE_THRESHOLD) {
+        saveCacheToLocalStorage();
+        newEntriesCount = 0;
+      }
+
       return found;
     } else {
       if (showCurrentWordAsLastSuggestion) {
@@ -107,3 +126,5 @@ export const getTransliterateSuggestions = async (
     return [];
   }
 };
+
+window.addEventListener('beforeunload', saveCacheToLocalStorage);
