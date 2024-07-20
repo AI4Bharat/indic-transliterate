@@ -46,7 +46,6 @@ export const getTransliterateSuggestions = async (
   customApiURL: string,
   config?: Config,
 ): Promise<string[] | undefined> => {
-  console.log(cache);
   const {
     // numOptions = 5,
     showCurrentWordAsLastSuggestion = true,
