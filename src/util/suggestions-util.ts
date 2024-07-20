@@ -12,6 +12,21 @@ type CacheEntry = {
 };
 
 const cache: Record<string, Record<string, CacheEntry>> = {};
+const MAX_CACHE_SIZE = 10;
+
+const getWordWithLowestFrequency = (dictionary: Record<string, CacheEntry>): string | null => {
+  let lowestFreqWord: string | null = null;
+  let lowestFreq = Infinity;
+
+  for (const word in dictionary) {
+    if (dictionary[word].frequency < lowestFreq) {
+      lowestFreq = dictionary[word].frequency;
+      lowestFreqWord = word;
+    }
+  }
+
+  return lowestFreqWord;
+};
 
 export const getTransliterateSuggestions = async (
   word: string,
@@ -61,6 +76,13 @@ export const getTransliterateSuggestions = async (
       const found = showCurrentWordAsLastSuggestion
         ? [...data.result, word]
         : data.result;
+
+      if (Object.keys(cache[lang]).length >= MAX_CACHE_SIZE) {
+        const lowestFreqWord = getWordWithLowestFrequency(cache[lang]);
+        if (lowestFreqWord) {
+          delete cache[lang][lowestFreqWord];
+        }
+      }
 
       cache[lang][word] = {
         suggestions: found,
