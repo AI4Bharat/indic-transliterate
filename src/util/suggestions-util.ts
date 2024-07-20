@@ -6,11 +6,19 @@ type Config = {
   lang?: Language;
 };
 
+type CacheEntry = {
+  suggestions: string[];
+  frequency: number;
+};
+
+const cache: Record<string, CacheEntry> = {};
+
 export const getTransliterateSuggestions = async (
   word: string,
   customApiURL: string,
   config?: Config,
 ): Promise<string[] | undefined> => {
+  console.log(cache);
   const { showCurrentWordAsLastSuggestion, lang } = config || {
     numOptions: 5,
     showCurrentWordAsLastSuggestion: true,
@@ -20,6 +28,11 @@ export const getTransliterateSuggestions = async (
   // const url = `https://www.google.com/inputtools/request?ime=transliteration_en_${lang}&num=5&cp=0&cs=0&ie=utf-8&oe=utf-8&app=jsapi&text=${word}`;
   // let myHeaders = new Headers();
   // myHeaders.append("Content-Type", "application/json");
+
+  if (cache[word]) {
+    cache[word].frequency += 1;
+    return cache[word].suggestions;
+  }
 
   const requestOptions = {
     method: "GET",
@@ -44,10 +57,22 @@ export const getTransliterateSuggestions = async (
       const found = showCurrentWordAsLastSuggestion
         ? [...data.result, word]
         : data.result;
+
+      // Update cache
+      cache[word] = {
+        suggestions: found,
+        frequency: 1,
+      };
+
       return found;
     } else {
       if (showCurrentWordAsLastSuggestion) {
-        return [word];
+        const fallback = [word];
+        cache[word] = {
+          suggestions: fallback,
+          frequency: 1,
+        };
+        return fallback;
       }
       return [];
     }
